@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import {JobService} from '../services/job.service';
 
 @Component({
   selector: 'jj-job-list',
@@ -9,12 +8,20 @@ import 'rxjs/add/operator/map';
 })
 export class JobListComponent implements OnInit {
 
-  constructor(private http:Http ) { }
+  private  jobs = [];
+  private error = '';
+
+  constructor(private jobService: JobService) { }
 
   ngOnInit() {
-    this.http.get('data/jobs.json')
-              .map( res => console.log(res.json()))
-              .subscribe();
+    
+    this.jobService.getJobs().subscribe(
+      data => this.jobs = data,
+      error => {
+        console.error(error);
+        this.error = error;
+      }
+    );
   }
 
 }
